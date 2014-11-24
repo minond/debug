@@ -3,7 +3,7 @@
 debug_last_call_time=$(date +%s%N)
 debug_color_time=
 debug_color_reset=
-debug_label_colors=()
+declare -A debug_label_colors=()
 
 if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
     debug_color_time="$(tput bold)$(tput setaf 7)"
