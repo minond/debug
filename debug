@@ -29,6 +29,21 @@ debug() {
 }
 
 #=== FUNCTION =================================================================
+#        NAME: debug:set_color
+# DESCRIPTION: set a label's color
+# PARAMETER 1: name
+# PARAMETER 2: color index
+#==============================================================================
+debug:set_color() {
+    local name="$1"
+    local index="$2"
+
+    if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
+        debug_label_colors["$name"]="$(tput bold)$(tput setaf "$index")"
+    fi
+}
+
+#=== FUNCTION =================================================================
 #        NAME: debug:get_color
 # DESCRIPTION: get a label's color
 # PARAMETER 1: name
