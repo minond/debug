@@ -29,6 +29,7 @@ debug() {
         current_time=$(date +%s%N)
         diff_time=$(( current_time - DEBUG_LAST_CALL_TIME ))
         diff_time=$(( diff_time / 1000000 ))
+        DEBUG_LAST_CALL_TIME=$(date +%s%N)
 
         echo "  $DEBUG_COLOR_LABEL$name$DEBUG_COLOR_RESET $message $DEBUG_COLOR_TIME+$diff_time ms$DEBUG_COLOR_RESET"
     fi
