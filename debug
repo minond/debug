@@ -1,14 +1,13 @@
 #!/bin/bash
 
-DEBUG_LAST_CALL_TIME=$(date +%s%N)
-DEBUG_COLOR_LABEL=
-DEBUG_COLOR_TIME=
-DEBUG_COLOR_RESET=
+debug_last_call_time=$(date +%s%N)
+debug_color_time=
+debug_color_reset=
+debug_label_colors=()
 
 if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
-    DEBUG_COLOR_LABEL="$(tput bold)$(tput setaf 3)"
-    DEBUG_COLOR_TIME="$(tput bold)$(tput setaf 7)"
-    DEBUG_COLOR_RESET="$(tput sgr0)"
+    debug_color_time="$(tput bold)$(tput setaf 7)"
+    debug_color_reset="$(tput sgr0)"
 fi
 
 #=== FUNCTION =================================================================
@@ -23,8 +22,26 @@ debug() {
     local message="$*"
 
     if [ ! -z "$DEBUG" ] && [[ "$name" == $DEBUG ]]; then
-        echo "  $DEBUG_COLOR_LABEL$name$DEBUG_COLOR_RESET $message $DEBUG_COLOR_TIME+$(debug:time_diff) ms$DEBUG_COLOR_RESET"
+        debug:get_color "$name" &> /dev/null
+        echo "  $(debug:get_color "$name")$name$debug_color_reset $message $debug_color_time+$(debug:time_diff) ms$debug_color_reset"
         debug:time_reset
+    fi
+}
+
+#=== FUNCTION =================================================================
+#        NAME: debug:get_color
+# DESCRIPTION: get a label's color
+# PARAMETER 1: name
+#==============================================================================
+debug:get_color() {
+    local name="$1"
+
+    if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
+        if [ ! "${debug_label_colors[$name]+yes}" ]; then
+            debug_label_colors["$name"]="$(tput bold)$(tput setaf "$(shuf -i 1-7 -n 1)")"
+        fi
+
+        echo "${debug_label_colors[$name]}"
     fi
 }
 
@@ -33,7 +50,7 @@ debug() {
 # DESCRIPTION: reset the global call timer
 #==============================================================================
 debug:time_reset() {
-    DEBUG_LAST_CALL_TIME=$(date +%s%N)
+    debug_last_call_time=$(date +%s%N)
 }
 
 #=== FUNCTION =================================================================
@@ -42,7 +59,7 @@ debug:time_reset() {
 #==============================================================================
 debug:time_diff() {
     local current_time=$(date +%s%N)
-    local diff_time=$(( current_time - DEBUG_LAST_CALL_TIME ))
+    local diff_time=$(( current_time - debug_last_call_time ))
 
     echo $(( diff_time / 1000000 ))
 }
