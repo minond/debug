@@ -1,9 +1,15 @@
 #!/bin/bash
 
 DEBUG_LAST_CALL_TIME=$(date +%s%N)
-DEBUG_COLOR_LABEL="$(tput bold)$(tput setaf 3)"
-DEBUG_COLOR_TIME="$(tput bold)$(tput setaf 7)"
-DEBUG_COLOR_RESET="$(tput sgr0)"
+DEBUG_COLOR_LABEL=
+DEBUG_COLOR_TIME=
+DEBUG_COLOR_RESET=
+
+if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
+    DEBUG_COLOR_LABEL="$(tput bold)$(tput setaf 3)"
+    DEBUG_COLOR_TIME="$(tput bold)$(tput setaf 7)"
+    DEBUG_COLOR_RESET="$(tput sgr0)"
+fi
 
 #=== FUNCTION =================================================================
 #        NAME: debug
