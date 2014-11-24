@@ -15,22 +15,34 @@ fi
 #        NAME: debug
 # DESCRIPTION: debug output method. enabled by setting a DEBUG env var
 # PARAMETER 1: message string label
-# PARAMETER 1: message
+# PARAMETER 2: message
 #==============================================================================
 debug() {
-    local current_time=
-    local diff_time=
-
     local name="$1"
     shift
     local message="$*"
 
     if [ ! -z "$DEBUG" ] && [[ "$name" == $DEBUG ]]; then
-        current_time=$(date +%s%N)
-        diff_time=$(( current_time - DEBUG_LAST_CALL_TIME ))
-        diff_time=$(( diff_time / 1000000 ))
-        DEBUG_LAST_CALL_TIME=$(date +%s%N)
-
-        echo "  $DEBUG_COLOR_LABEL$name$DEBUG_COLOR_RESET $message $DEBUG_COLOR_TIME+$diff_time ms$DEBUG_COLOR_RESET"
+        echo "  $DEBUG_COLOR_LABEL$name$DEBUG_COLOR_RESET $message $DEBUG_COLOR_TIME+$(debug:time_diff) ms$DEBUG_COLOR_RESET"
+        debug:time_reset
     fi
+}
+
+#=== FUNCTION =================================================================
+#        NAME: debug:time_reset
+# DESCRIPTION: reset the global call timer
+#==============================================================================
+debug:time_reset() {
+    DEBUG_LAST_CALL_TIME=$(date +%s%N)
+}
+
+#=== FUNCTION =================================================================
+#        NAME: debug:time_diff
+# DESCRIPTION: get a time difference using the global call timer
+#==============================================================================
+debug:time_diff() {
+    local current_time=$(date +%s%N)
+    local diff_time=$(( current_time - DEBUG_LAST_CALL_TIME ))
+
+    echo $(( diff_time / 1000000 ))
 }
