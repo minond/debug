@@ -53,7 +53,7 @@ debug:get_color() {
 
     if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
         if [ ! "${debug_label_colors[$name]+yes}" ]; then
-            debug_label_colors["$name"]="$(tput bold)$(tput setaf "$(shuf -i 1-7 -n 1)")"
+            debug_label_colors["$name"]="$(tput bold)$(tput setaf "$RANDOM")"
         fi
 
         echo "${debug_label_colors[$name]}"
