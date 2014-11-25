@@ -30,3 +30,7 @@ only calls with a name of "route".
 
 you can disable colors by setting a `DEBUG_COLORS` environment variable.to `0`:
 `DEBUG_COLORS=0 DEBUG=* your_script`
+
+look at the pretty colors:
+
+![colors...](http://i.imgur.com/CShYCSp.png)
