@@ -1,5 +1,6 @@
-`debug` - a port of Node.js's [debug](https://www.npmjs.org/package/debug) for
-bash.
+`debug` - a port of node's [debug](https://www.npmjs.org/package/debug) for
+bash, which is "modelled after node core's debugging technique". so I guess
+this is a port of a model of node's core debugging output.
 
 #### install
 
