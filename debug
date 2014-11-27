@@ -50,10 +50,17 @@ debug:set_color() {
 #==============================================================================
 debug:get_color() {
     local name="$1"
+    local color=
 
     if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
         if [ ! "${debug_label_colors[$name]+yes}" ]; then
-            debug_label_colors["$name"]="$(tput bold)$(tput setaf "$RANDOM")"
+            if [ $(tput colors) -gt 8 ]; then
+                color="$RANDOM"
+            else
+                color=$(seq 1 8 | shuf | head -1)
+            fi
+
+            debug_label_colors["$name"]="$(tput bold)$(tput setaf "$color")"
         fi
 
         echo "${debug_label_colors[$name]}"
