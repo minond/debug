@@ -1,9 +1,16 @@
 #!/bin/bash
 
-debug_last_call_time=$(date +%s%N)
+which gdate &> /dev/null
+if [[ "$?" -eq 0 ]]; then
+    date=gdate
+else
+    date=date
+fi
+
+debug_last_call_time=$("$date" +%s%N)
 debug_color_time=
 debug_color_reset=
-declare -A debug_label_colors=()
+declare -a debug_label_colors=()
 
 if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
     debug_color_time="$(tput bold)$(tput setaf 7)"
@@ -54,7 +61,7 @@ debug:get_color() {
 
     if [ -z "$DEBUG_COLORS" ] || [[ "$DEBUG_COLORS" -eq 1 ]]; then
         if [ ! "${debug_label_colors[$name]+yes}" ]; then
-            if [ $(tput colors) -gt 8 ]; then
+            if [ "$(tput colors)" -gt 8 ]; then
                 color="$RANDOM"
             else
                 color=$(seq 1 8 | shuf | head -1)
@@ -72,7 +79,7 @@ debug:get_color() {
 # DESCRIPTION: reset the global call timer
 #==============================================================================
 debug:time_reset() {
-    debug_last_call_time=$(date +%s%N)
+    debug_last_call_time=$("$date" +%s%N)
 }
 
 #=== FUNCTION =================================================================
@@ -80,7 +87,7 @@ debug:time_reset() {
 # DESCRIPTION: get a time difference using the global call timer
 #==============================================================================
 debug:time_diff() {
-    local current_time=$(date +%s%N)
+    local current_time=$("$date" +%s%N)
     local diff_time=$(( current_time - debug_last_call_time ))
 
     echo $(( diff_time / 1000000 ))
